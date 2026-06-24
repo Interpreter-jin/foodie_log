@@ -1,0 +1,317 @@
+{% extends "base.html" %}
+{% block title %}맛집 후기 작성 — FoodieLog{% endblock %}
+
+{% block content %}
+<main class="page">
+  <div class="container">
+    <h1 style="font-size:20px;font-weight:900;margin-bottom:16px;letter-spacing:-0.5px;">
+      🍽️ 맛집 후기 작성
+    </h1>
+
+    <!-- 식당 정보 -->
+    <div class="form-section">
+      <div class="form-section-title">
+        🏪 식당 정보
+        <span class="required">필수</span>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">식당 이름 *</label>
+        <input type="text" id="restaurant-name" class="form-input" placeholder="식당 이름을 입력하세요">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">카테고리 *</label>
+        <div class="cat-selector" id="cat-selector">
+          <button class="cat-option" data-cat="한식" onclick="selectCat(this)">
+            <span class="cat-emoji">🍚</span>한식
+          </button>
+          <button class="cat-option" data-cat="중식" onclick="selectCat(this)">
+            <span class="cat-emoji">🥢</span>중식
+          </button>
+          <button class="cat-option" data-cat="양식" onclick="selectCat(this)">
+            <span class="cat-emoji">🍝</span>양식
+          </button>
+          <button class="cat-option" data-cat="퓨전" onclick="selectCat(this)">
+            <span class="cat-emoji">🌮</span>퓨전
+          </button>
+          <button class="cat-option" data-cat="카페" onclick="selectCat(this)">
+            <span class="cat-emoji">☕</span>카페
+          </button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">별점 *</label>
+        <div class="star-input" id="star-input">
+          <button class="star-btn" data-v="1" onclick="setRating(1)">★</button>
+          <button class="star-btn" data-v="2" onclick="setRating(2)">★</button>
+          <button class="star-btn" data-v="3" onclick="setRating(3)">★</button>
+          <button class="star-btn" data-v="4" onclick="setRating(4)">★</button>
+          <button class="star-btn" data-v="5" onclick="setRating(5)">★</button>
+        </div>
+        <div id="rating-label" style="font-size:12px;color:var(--text-light);margin-top:4px;">별점을 선택해주세요</div>
+      </div>
+    </div>
+
+    <!-- 메뉴 & 위치 -->
+    <div class="form-section">
+      <div class="form-section-title">🗺️ 메뉴 & 위치</div>
+
+      <div class="form-group">
+        <label class="form-label">먹은 메뉴 / 대표 메뉴 *</label>
+        <input type="text" id="menu" class="form-input" placeholder="예: 소갈비, 삼겹살, 아메리카노...">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">위치 (도보 거리)</label>
+        <div class="location-selector" id="loc-selector">
+          <button class="loc-option" data-loc="도보 5분" onclick="selectLoc(this)">🚶 도보 5분</button>
+          <button class="loc-option" data-loc="도보 10분" onclick="selectLoc(this)">🚶 도보 10분</button>
+          <button class="loc-option" data-loc="도보 15분" onclick="selectLoc(this)">🚶 도보 15분</button>
+          <button class="loc-option" data-loc="도보 20분+" onclick="selectLoc(this)">🚶 도보 20분+</button>
+          <button class="loc-option" data-loc="버스/지하철" onclick="selectLoc(this)">🚌 버스/지하철</button>
+          <button class="loc-option" data-loc="차량 필요" onclick="selectLoc(this)">🚗 차량 필요</button>
+        </div>
+        <input type="text" id="location-custom" class="form-input mt-8" placeholder="또는 직접 입력 (예: 강남역 3번 출구 앞)">
+      </div>
+    </div>
+
+    <!-- 후기 내용 -->
+    <div class="form-section">
+      <div class="form-section-title">✍️ 후기</div>
+      <div class="form-group">
+        <label class="form-label">자세한 후기</label>
+        <textarea id="content" class="form-input" placeholder="맛, 분위기, 가격 등 솔직한 후기를 남겨주세요..."></textarea>
+      </div>
+    </div>
+
+    <!-- 사진 업로드 -->
+    <div class="form-section">
+      <div class="form-section-title">📸 사진</div>
+
+      <div class="image-upload-area" onclick="document.getElementById('file-input-gallery').click()">
+        <div class="upload-icon">📷</div>
+        <div class="upload-text">사진을 추가하세요</div>
+        <div class="upload-hint">최대 5장까지 업로드 가능</div>
+        <div class="upload-actions" onclick="event.stopPropagation()">
+          <button class="upload-action-btn camera" onclick="openCamera()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            즉시 촬영
+          </button>
+          <button class="upload-action-btn gallery" onclick="document.getElementById('file-input-gallery').click()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            앨범에서 선택
+          </button>
+        </div>
+      </div>
+      <input type="file" id="file-input-gallery" accept="image/*" multiple class="hidden" onchange="handleImages(this.files)">
+      <input type="file" id="file-input-camera" accept="image/*" capture="environment" class="hidden" onchange="handleImages(this.files)">
+
+      <div class="image-previews" id="image-previews"></div>
+    </div>
+
+    <!-- 태그: 함께한 팀원 -->
+    <div class="form-section">
+      <div class="form-section-title">👥 함께 먹은 팀원 태그</div>
+      <div class="form-group">
+        <label class="form-label">팀원 닉네임 추가</label>
+        <div class="tag-input-wrap">
+          <input type="text" id="tag-input" class="form-input tag-input-field" placeholder="닉네임 입력 후 Enter">
+          <button onclick="addTag()" style="padding:10px 16px;background:var(--red);color:#fff;border-radius:var(--radius-sm);font-size:14px;font-weight:700;flex-shrink:0;">추가</button>
+        </div>
+        <div class="added-tags" id="added-tags"></div>
+      </div>
+    </div>
+
+    <!-- 제출 -->
+    <button class="submit-btn" id="submit-btn" onclick="submitPost()">
+      🍽️ 후기 등록하기
+    </button>
+    <div style="height:8px"></div>
+  </div>
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let selectedCat = '';
+let selectedRating = 0;
+let selectedLoc = '';
+let tags = [];
+let imageFiles = [];
+let imageBase64s = [];
+
+const RATING_LABELS = { 1: '별로예요 😕', 2: '그저 그래요 😐', 3: '괜찮아요 😊', 4: '맛있어요 😋', 5: '최고예요 🤩' };
+
+function selectCat(btn) {
+  document.querySelectorAll('.cat-option').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selectedCat = btn.dataset.cat;
+}
+
+function setRating(v) {
+  selectedRating = v;
+  document.querySelectorAll('.star-btn').forEach((b, i) => {
+    b.classList.toggle('active', i < v);
+  });
+  document.getElementById('rating-label').textContent = RATING_LABELS[v] || '';
+}
+
+function selectLoc(btn) {
+  document.querySelectorAll('.loc-option').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selectedLoc = btn.dataset.loc;
+  document.getElementById('location-custom').value = '';
+}
+
+function openCamera() {
+  document.getElementById('file-input-camera').click();
+}
+
+function handleImages(files) {
+  if (!files.length) return;
+  const remaining = 5 - imageBase64s.length;
+  const toAdd = Array.from(files).slice(0, remaining);
+  toAdd.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      imageBase64s.push(e.target.result);
+      imageFiles.push(file);
+      renderPreviews();
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function renderPreviews() {
+  const wrap = document.getElementById('image-previews');
+  wrap.innerHTML = imageBase64s.map((src, i) => `
+    <div class="img-preview">
+      <img src="${src}" alt="preview">
+      <button class="img-preview-del" onclick="removeImage(${i})">✕</button>
+    </div>`).join('');
+}
+
+function removeImage(i) {
+  imageBase64s.splice(i, 1);
+  imageFiles.splice(i, 1);
+  renderPreviews();
+}
+
+function addTag() {
+  const input = document.getElementById('tag-input');
+  const val = input.value.trim().replace(/^@/, '');
+  if (!val || tags.includes(val) || tags.length >= 10) return;
+  tags.push(val);
+  input.value = '';
+  renderTags();
+}
+
+document.getElementById('tag-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') { e.preventDefault(); addTag(); }
+});
+
+function removeTag(i) {
+  tags.splice(i, 1);
+  renderTags();
+}
+
+function renderTags() {
+  document.getElementById('added-tags').innerHTML = tags.map((t, i) => `
+    <span class="added-tag">@${t} <button onclick="removeTag(${i})">✕</button></span>`).join('');
+}
+
+async function uploadImages(token) {
+  const urls = [];
+  for (let i = 0; i < imageBase64s.length; i++) {
+    const res = await fetch('/api/upload-image', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      body: JSON.stringify({
+        imageData: imageBase64s[i],
+        filename: imageFiles[i]?.name || `img_${i}.jpg`
+      })
+    }).then(r => r.json());
+    if (res.success) urls.push(res.url);
+  }
+  return urls;
+}
+
+async function submitPost() {
+  const name = document.getElementById('restaurant-name').value.trim();
+  const menu = document.getElementById('menu').value.trim();
+  const content = document.getElementById('content').value.trim();
+  const locCustom = document.getElementById('location-custom').value.trim();
+
+  if (!name) { showToast('식당 이름을 입력해주세요', 'error'); return; }
+  if (!selectedCat) { showToast('카테고리를 선택해주세요', 'error'); return; }
+  if (!selectedRating) { showToast('별점을 선택해주세요', 'error'); return; }
+  if (!menu) { showToast('메뉴를 입력해주세요', 'error'); return; }
+
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = true;
+  btn.textContent = '업로드 중...';
+
+  const token = await getIdToken();
+  if (!token) { showToast('로그인이 필요합니다', 'error'); btn.disabled = false; btn.textContent = '🍽️ 후기 등록하기'; return; }
+
+  // Upload images first
+  let imageUrls = [];
+  if (imageBase64s.length > 0) {
+    btn.textContent = `사진 업로드 중 (0/${imageBase64s.length})...`;
+    imageUrls = await uploadImages(token);
+  }
+
+  const res = await fetch('/api/posts', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+    body: JSON.stringify({
+      restaurantName: name,
+      category: selectedCat,
+      rating: selectedRating,
+      menu,
+      location: locCustom || selectedLoc,
+      content,
+      imageUrls,
+      tags
+    })
+  }).then(r => r.json());
+
+  if (res.success) {
+    showToast('후기가 등록되었습니다! 🎉');
+    setTimeout(() => location.href = `/post/${res.postId}`, 800);
+  } else {
+    showToast('등록 실패: ' + res.error, 'error');
+    btn.disabled = false;
+    btn.textContent = '🍽️ 후기 등록하기';
+  }
+}
+
+// Auth guard + token
+(async () => {
+  const config = await fetch('/api/firebase-config').then(r => r.json());
+  const { initializeApp } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js');
+  const { getAuth, onAuthStateChanged } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js');
+  const app = initializeApp(config);
+  const auth = getAuth(app);
+  window._authInstance = auth;
+  onAuthStateChanged(auth, user => {
+    if (!user) location.href = '/';
+  });
+})();
+
+async function getIdToken() {
+  const auth = window._authInstance;
+  if (!auth || !auth.currentUser) return null;
+  return auth.currentUser.getIdToken();
+}
+
+function showToast(msg, type) {
+  const wrap = document.querySelector('.toast-wrap');
+  if (!wrap) return;
+  wrap.innerHTML = `<div class="toast ${type === 'error' ? 'error' : ''}">${msg}</div>`;
+  setTimeout(() => wrap.innerHTML = '', 2800);
+}
+</script>
+{% endblock %}
